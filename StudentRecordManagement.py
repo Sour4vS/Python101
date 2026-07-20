@@ -85,9 +85,9 @@ while True:
 
     elif choice == "5":
         rollnum = int(input("Enter the roll number: "))
-        student = find_student(rollnum)  # Use rollnum here!
+        student = find_student(rollnum)  
 
-        if student:  # Aligned correctly
+        if student:  
             students.remove(student)
             save_data(students)
             print("Success: Student deleted.")
