@@ -61,7 +61,6 @@ class InventoryManager:
     def save_data(self):
         with open("inventory.json", "w") as file:
 
-            # Convert every Product object into a dictionary
             data = [product.__dict__ for product in self.inventory]
 
             json.dump(data, file, indent=4)
