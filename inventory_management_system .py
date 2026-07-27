@@ -11,7 +11,6 @@ class Product:
     def __str__(self):
         return f"{self.product_id} | {self.name} | ₹{self.price} | Qty:{self.quantity}"
 
-
 class InventoryManager:
 
     def __init__(self):
