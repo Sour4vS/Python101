@@ -1,3 +1,6 @@
+import json
+
+
 class BalanceException(Exception):
     pass
 
@@ -66,14 +69,79 @@ class SavingsAccount(InterestRewardsAccount):
             print(f"\nWithdrawal interrupted: {error}")
 
 
+class BankManager:
+    def __init__(self):
+        self.accounts = []
+
+    def add_account(self, account):
+        self.accounts.append(account)
+
+    def display_accounts(self):
+        print("\n------ Accounts ------")
+        for account in self.accounts:
+            account.get_balance()
+
+    def save_data(self):
+        with open("accounts.json", "w") as file:
+
+            data = []
+
+            for account in self.accounts:
+                data.append(account.__dict__)
+
+            json.dump(data, file, indent=4)
+
+        print("\nAccounts saved successfully.")
+
+    def load_data(self):
+        try:
+            with open("accounts.json", "r") as file:
+
+                data = json.load(file)
+
+                self.accounts = []
+
+                for account_data in data:
+                    account = BankAccount(
+                        account_data["balance"],
+                        account_data["name"]
+                    )
+                    self.accounts.append(account)
+
+            print("\nAccounts loaded successfully.")
+
+        except FileNotFoundError:
+            print("\nNo account file found. Starting with empty database.")
+
+
 if __name__ == "__main__":
-    dave = BankAccount(1000, "Dave")
-    sara = BankAccount(2000, "Sara")
 
-    jim = InterestRewardsAccount(1000, "Jim")
+    manager = BankManager()
 
-    tim = SavingsAccount(3000, "Tim")
+    manager.load_data()
+
+    if len(manager.accounts) == 0:
+
+        dave = BankAccount(1000, "Dave")
+        sara = BankAccount(2000, "Sara")
+        jim = InterestRewardsAccount(1000, "Jim")
+        tim = SavingsAccount(3000, "Tim")
+
+        manager.add_account(dave)
+        manager.add_account(sara)
+        manager.add_account(jim)
+        manager.add_account(tim)
+
+    else:
+        dave = manager.accounts[0]
+        sara = manager.accounts[1]
+        jim = manager.accounts[2]
+        tim = manager.accounts[3]
 
     tim.deposit(500)
     tim.withdraw(500)
     tim.transfer(100, jim)
+
+    manager.display_accounts()
+
+    manager.save_data()
